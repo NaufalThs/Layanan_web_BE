@@ -11,8 +11,8 @@ class CreateGradesTable extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->string('subject');
-            $table->integer('grade');
+            $table->string('matkul');
+            $table->integer('nilai');
             $table->timestamps();
         });
     }

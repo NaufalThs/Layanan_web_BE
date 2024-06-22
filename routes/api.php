@@ -10,5 +10,6 @@ Route::post("login", [AuthController::class, "login"]);
 
 Route::get('/students', [StudentManagementController::class, 'index']);
 Route::get('/students/grades', [StudentManagementController::class, 'grades']);
+Route::get('/students/nims', [StudentManagementController::class, 'getNims']);
 Route::post('/students', [StudentManagementController::class, 'store']);
-Route::post('/students/{student}/grades', [StudentManagementController::class, 'storeGrades']);
+Route::post('/students/grades', [StudentManagementController::class, 'storeGrades']);
