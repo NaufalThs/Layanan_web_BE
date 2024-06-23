@@ -72,7 +72,7 @@ class StudentManagementController extends Controller
     }
 
     public function storeGrades(Request $request)
-{
+    {
     $validator = Validator::make($request->all(), [
         'nim' => 'required|string|max:255|exists:students,nim',
         'matkul' => 'required|string|max:255',
@@ -97,6 +97,59 @@ class StudentManagementController extends Controller
         Log::error('Exception:', ['error' => $e->getMessage()]);
         return response()->json(['error' => 'Failed to add grade.'], 500);
     }
+    }
+public function update(Request $request, Student $student)
+{
+    $validator = Validator::make($request->all(), [
+        'nama' => 'required|string|max:255',
+        'nim' => 'required|string|max:255|unique:students,nim,' . $student->id,
+        'username' => 'required|string|max:255|unique:students,username,' . $student->id,
+        'password' => 'nullable|string|min:6',
+        'fakultas' => 'required|string|max:255',
+        'program_studi' => 'required|string|max:255',
+        'wali_dosen' => 'required|string|max:255',
+        'angkatan' => 'required|integer|min:2000|max:2100',
+    ]);
+
+    if ($validator->fails()) {
+        Log::error('Validation Errors:', $validator->errors()->toArray());
+        return response()->json($validator->errors(), 422);
+    }
+
+    try {
+        $student->fill($request->all());
+        if ($request->has('password')) {
+            $student->password = bcrypt($request->password);
+        }
+        $student->save();
+
+        return response()->json(['message' => 'Student updated successfully', 'student' => $student], 200);
+    } catch (\Exception $e) {
+        Log::error('Exception:', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Failed to update student.'], 500);
+    }
 }
+
+public function destroy(Student $student)
+{
+    try {
+        $student->delete();
+        return response()->json(['message' => 'Student deleted successfully'], 200);
+    } catch (\Exception $e) {
+        Log::error('Exception:', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Failed to delete student.'], 500);
+    }
+}
+
+public function show(Student $student)
+{
+    try {
+        return response()->json($student);
+    } catch (\Exception $e) {
+        Log::error('Exception:', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Failed to fetch student data.'], 500);
+    }
+}
+
 
 }
