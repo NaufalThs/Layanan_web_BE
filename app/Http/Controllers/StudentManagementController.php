@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Grade;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -41,7 +42,7 @@ class StudentManagementController extends Controller
         try {
             $student = new Student();
             $student->fill($request->all());
-            $student->password = bcrypt($request->password);
+            $student->password = Hash::make($request->password);
             $student->save();
 
             return response()->json(['message' => 'Student created successfully', 'student' => $student], 201);
@@ -119,7 +120,7 @@ public function update(Request $request, Student $student)
     try {
         $student->fill($request->all());
         if ($request->has('password')) {
-            $student->password = bcrypt($request->password);
+            $student->password = Hash::make($request->password);
         }
         $student->save();
 
