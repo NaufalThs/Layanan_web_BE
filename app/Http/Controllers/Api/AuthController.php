@@ -53,38 +53,36 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
-            $validateUser = Validator::make($request->all(),
-            [
-                'username' => 'required|string',
-                'password' => 'required|string' // Corrected the validation rule here
-            ]);
-
-            if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validation error',
-                    'errors' => $validateUser->errors()
-                ], 401);
-            }
-            
-            $student = Student::where('username', $request->username)->first();
-
-            if(!Auth::attempt($request->only(['username', 'password']))){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'username & password tidak sama atau salah'
-                    
-                ], 401);
-            }
-
+        $validateUser = Validator::make($request->all(),
+        [
+            'username' => 'required|string',
+            'password' => 'required|string'
+        ]);
+    
+        if ($validateUser->fails()) {
             return response()->json([
-                'status' => true,
-                'message' => 'Login berhasil',
-                'token' => $student->createToken("API TOKEN")->plainTextToken
-            ], 200);
-
-        
+                'status' => false,
+                'message' => 'Validation error',
+                'errors' => $validateUser->errors()
+            ], 401);
         }
+    
+        if (!Auth::attempt($request->only(['username', 'password']))) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Username & password are incorrect'
+            ], 401);
+        }
+    
+        $student = Student::where('username', $request->username)->firstOrFail();
+    
+        return response()->json([
+            'status' => true,
+            'message' => 'Login successful',
+            'token' => $student->createToken("API TOKEN")->plainTextToken,
+            'student' => $student
+        ], 200);
+    }
+    
 
 }

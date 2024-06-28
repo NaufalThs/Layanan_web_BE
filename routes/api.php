@@ -16,3 +16,5 @@ Route::post('/students', [StudentManagementController::class, 'store']);
 Route::post('/students/grades', [StudentManagementController::class, 'storeGrades']);
 Route::put('/students/{student}', [StudentManagementController::class, 'update']);
 Route::delete('/students/{student}', [StudentManagementController::class, 'destroy']);
+
+Route::get('/student/{id}', [StudentManagementController::class, 'show']);
