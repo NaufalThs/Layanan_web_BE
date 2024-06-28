@@ -71,7 +71,26 @@ class StudentManagementController extends Controller
             return response()->json(['error' => 'Failed to fetch grades data.'], 500);
         }
     }
-
+    
+    public function getGradesByNim($nim)
+    {
+        try {
+            $student = Student::where('nim', $nim)->firstOrFail();
+            $grades = $student->grades;
+    
+            return response()->json([
+                'status' => true,
+                'grades' => $grades
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to fetch grades',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
     public function storeGrades(Request $request)
     {
     $validator = Validator::make($request->all(), [

@@ -18,3 +18,4 @@ Route::put('/students/{student}', [StudentManagementController::class, 'update']
 Route::delete('/students/{student}', [StudentManagementController::class, 'destroy']);
 
 Route::get('/student/{id}', [StudentManagementController::class, 'show']);
+Route::get('/grades/{nim}', [StudentManagementController::class, 'getGradesByNim']);
